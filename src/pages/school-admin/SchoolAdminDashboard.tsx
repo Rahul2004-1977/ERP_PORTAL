@@ -1,7 +1,13 @@
-import { Users, BookOpen, GraduationCap, Clock } from "lucide-react";
+import { Users, BookOpen, GraduationCap, Clock, Bell } from "lucide-react";
 import { StatCard } from "@/components/StatCard";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
-
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Legend,
+  Tooltip,
+} from "recharts";
 
 const classData = [
   { name: "Primary (1-5)", students: 420, color: "hsl(168, 80%, 36%)" },
@@ -10,24 +16,34 @@ const classData = [
   { name: "Senior (11-12)", students: 180, color: "hsl(280, 65%, 55%)" },
 ];
 
-const classes = [
-  { name: "Class 1-A", students: 42, section: "Primary" },
-  { name: "Class 1-B", students: 40, section: "Primary" },
-  { name: "Class 2-A", students: 44, section: "Primary" },
-  { name: "Class 3-A", students: 38, section: "Primary" },
-  { name: "Class 6-A", students: 45, section: "Middle" },
-  { name: "Class 6-B", students: 43, section: "Middle" },
-  { name: "Class 7-A", students: 41, section: "Middle" },
-  { name: "Class 9-A", students: 40, section: "Secondary" },
-  { name: "Class 9-B", students: 38, section: "Secondary" },
-  { name: "Class 10-A", students: 42, section: "Secondary" },
-  { name: "Class 11-A", students: 35, section: "Senior" },
-  { name: "Class 12-A", students: 37, section: "Senior" },
+const notifications = [
+  {
+    title: "🎂 Birthday: Rahul Sharma",
+    desc: "Class 6-A student",
+    time: "Today",
+  },
+  {
+    title: "📢 Staff Meeting",
+    desc: "At 3:00 PM in conference hall",
+    time: "Today",
+  },
+  {
+    title: "📝 Exam Schedule Released",
+    desc: "Check exams module",
+    time: "Yesterday",
+  },
+  {
+    title: "🎉 Annual Day",
+    desc: "Coming this weekend",
+    time: "Upcoming",
+  },
 ];
 
 export default function SchoolAdminDashboard() {
   return (
     <div className="space-y-6">
+
+      {/* Top Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard title="Total Classes" value={32} icon={BookOpen} trend="4 new this term" trendUp color="primary" />
         <StatCard title="Total Students" value="1,155" icon={Users} trend="12% this year" trendUp color="info" />
@@ -35,15 +51,25 @@ export default function SchoolAdminDashboard() {
         <StatCard title="Avg Attendance" value="94.2%" icon={Clock} trend="1.5% improvement" trendUp color="warning" />
       </div>
 
+      {/* Main Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Pie Chart */}
-        <div className="stat-card">
-          <h3 className="text-base font-display font-semibold mb-4">Class Distribution</h3>
-          <ResponsiveContainer width="100%" height={280}>
+
+        {/* ✅ BIG Class Distribution Chart */}
+        <div className="lg:col-span-2 stat-card">
+          <h3 className="text-base font-semibold mb-4">Class Distribution</h3>
+
+          <ResponsiveContainer width="100%" height={320}>
             <PieChart>
-              <Pie data={classData} cx="50%" cy="50%" innerRadius={60} outerRadius={100} dataKey="students" nameKey="name" paddingAngle={4}>
-                {classData.map((entry, index) => (
-                  <Cell key={index} fill={entry.color} />
+              <Pie
+                data={classData}
+                dataKey="students"
+                nameKey="name"
+                innerRadius={70}
+                outerRadius={120}
+                paddingAngle={4}
+              >
+                {classData.map((entry, i) => (
+                  <Cell key={i} fill={entry.color} />
                 ))}
               </Pie>
               <Tooltip />
@@ -52,23 +78,29 @@ export default function SchoolAdminDashboard() {
           </ResponsiveContainer>
         </div>
 
-        {/* Class Cards */}
-        <div className="lg:col-span-2 stat-card">
-          <h3 className="text-base font-display font-semibold mb-4">Classes Overview</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-            {classes.map((cls) => (
+        {/* 🔔 Notifications */}
+        <div className="stat-card">
+          <h3 className="text-base font-semibold mb-4 flex items-center gap-2">
+            <Bell className="w-4 h-4" />
+            Notifications
+          </h3>
+
+          <div className="space-y-3">
+            {notifications.map((item, i) => (
               <div
-                key={cls.name}
-                className="p-3 rounded-lg border border-border bg-muted/30 hover:bg-muted/60 transition-colors"
+                key={i}
+                className="p-3 rounded-lg bg-muted/40 hover:bg-muted/60 transition"
               >
-                <p className="text-sm font-semibold">{cls.name}</p>
-                <p className="text-xs text-muted-foreground">{cls.section}</p>
-                <p className="text-lg font-bold text-primary mt-1">{cls.students}</p>
-                <p className="text-xs text-muted-foreground">students</p>
+                <p className="text-sm font-medium">{item.title}</p>
+                <p className="text-xs text-muted-foreground">{item.desc}</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {item.time}
+                </p>
               </div>
             ))}
           </div>
         </div>
+
       </div>
     </div>
   );

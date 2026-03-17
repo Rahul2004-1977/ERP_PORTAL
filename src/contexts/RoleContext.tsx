@@ -17,7 +17,7 @@ const RoleContext = createContext<RoleContextType | undefined>(undefined);
 
 const DEFAULT_TEACHER_MODULES = [
   "dashboard", "students", "attendance", "assignments", "marks",
-  "exams", "digital-classroom", "timetable", "communication"
+  "exams", "digital-classroom", "timetable", "communication","leave"
 ];
 
 export function RoleProvider({ children }: { children: ReactNode }) {

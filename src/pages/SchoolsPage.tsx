@@ -1,12 +1,10 @@
 import { useState } from "react";
-
 import {
   Plus,
   Search,
   Edit,
   Trash2,
   Eye,
-  School as SchoolIcon,
 } from "lucide-react";
 import { AddSchoolModal } from "@/components/AddSchoolModal";
 
@@ -18,25 +16,88 @@ interface SchoolData {
   address: string;
   admin: string;
   status: "Active" | "Inactive";
+  subscription: "Paid" | "Unpaid";
+  subscriptionEnd: string;
   created: string;
   type: "Public" | "Private";
 }
 
 const mockSchools: SchoolData[] = [
-  { id: 1, name: "Greenwood Academy", email: "info@greenwood.edu", phone: "+1 234-567-8901", address: "123 Oak St, Springfield", admin: "John Smith", status: "Active", created: "2024-01-15", type: "Private" },
-  { id: 2, name: "Sunrise International", email: "contact@sunrise.edu", phone: "+1 234-567-8902", address: "456 Elm Ave, Riverside", admin: "Sarah Johnson", status: "Active", created: "2024-02-20", type: "Private" },
-  { id: 3, name: "Heritage School", email: "admin@heritage.edu", phone: "+1 234-567-8903", address: "789 Pine Rd, Lakewood", admin: "Michael Brown", status: "Active", created: "2024-03-10", type: "Public" },
-  { id: 4, name: "Mapleton High", email: "info@mapleton.edu", phone: "+1 234-567-8904", address: "321 Maple Dr, Hilltown", admin: "Emily Davis", status: "Inactive", created: "2024-04-05", type: "Public" },
-  { id: 5, name: "Riverside Public", email: "office@riverside.edu", phone: "+1 234-567-8905", address: "654 River Ln, Bayview", admin: "Robert Wilson", status: "Active", created: "2024-05-12", type: "Public" },
+  {
+    id: 1,
+    name: "Greenwood Academy",
+    email: "info@greenwood.edu",
+    phone: "+1 234-567-8901",
+    address: "123 Oak St",
+    admin: "John Smith",
+    status: "Active",
+    subscription: "Paid",
+    subscriptionEnd: "2026-12-31",
+    created: "2024-01-15",
+    type: "Private",
+  },
+  {
+    id: 2,
+    name: "Sunrise International",
+    email: "contact@sunrise.edu",
+    phone: "+1 234-567-8902",
+    address: "456 Elm Ave",
+    admin: "Sarah Johnson",
+    status: "Active",
+    subscription: "Unpaid",
+    subscriptionEnd: "",
+    created: "2024-02-20",
+    type: "Private",
+  },
+  {
+    id: 3,
+    name: "Heritage School",
+    email: "admin@heritage.edu",
+    phone: "+1 234-567-8903",
+    address: "789 Pine Rd",
+    admin: "Michael Brown",
+    status: "Active",
+    subscription: "Paid",
+    subscriptionEnd: "2026-08-15",
+    created: "2024-03-10",
+    type: "Public",
+  },
+  {
+    id: 4,
+    name: "Mapleton High",
+    email: "info@mapleton.edu",
+    phone: "+1 234-567-8904",
+    address: "321 Maple Dr",
+    admin: "Emily Davis",
+    status: "Inactive",
+    subscription: "Unpaid",
+    subscriptionEnd: "",
+    created: "2024-04-05",
+    type: "Public",
+  },
+  {
+    id: 5,
+    name: "Riverside Public",
+    email: "office@riverside.edu",
+    phone: "+1 234-567-8905",
+    address: "654 River Ln",
+    admin: "Robert Wilson",
+    status: "Active",
+    subscription: "Paid",
+    subscriptionEnd: "2026-05-12",
+    created: "2024-05-12",
+    type: "Public",
+  },
 ];
 
 export default function SchoolsPage() {
   const [showModal, setShowModal] = useState(false);
   const [search, setSearch] = useState("");
 
-  const filtered = mockSchools.filter((s) =>
-    s.name.toLowerCase().includes(search.toLowerCase()) ||
-    s.email.toLowerCase().includes(search.toLowerCase())
+  const filtered = mockSchools.filter(
+    (s) =>
+      s.name.toLowerCase().includes(search.toLowerCase()) ||
+      s.email.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -45,11 +106,14 @@ export default function SchoolsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="page-header">Schools</h1>
-          <p className="text-sm text-muted-foreground mt-1">{mockSchools.length} schools registered</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            {mockSchools.length} schools registered
+          </p>
         </div>
+
         <button
           onClick={() => setShowModal(true)}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:opacity-90"
         >
           <Plus className="w-4 h-4" />
           Add School
@@ -65,7 +129,7 @@ export default function SchoolsPage() {
             placeholder="Search schools..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-muted rounded-lg text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-shadow"
+            className="w-full pl-10 pr-4 py-2.5 bg-muted rounded-lg text-sm outline-none focus:ring-2 focus:ring-primary/20"
           />
         </div>
       </div>
@@ -73,63 +137,115 @@ export default function SchoolsPage() {
       {/* Table */}
       <div className="stat-card !p-0 overflow-x-auto">
         <table className="w-full text-sm">
+          
+          {/* Header */}
           <thead>
             <tr className="border-b border-border bg-muted/50">
-              <th className="text-left p-4 font-semibold text-muted-foreground">School</th>
-              <th className="text-left p-4 font-semibold text-muted-foreground hidden md:table-cell">Email</th>
-              <th className="text-left p-4 font-semibold text-muted-foreground hidden lg:table-cell">Phone</th>
-              <th className="text-left p-4 font-semibold text-muted-foreground hidden xl:table-cell">Admin</th>
-              <th className="text-left p-4 font-semibold text-muted-foreground">Status</th>
-              <th className="text-left p-4 font-semibold text-muted-foreground hidden lg:table-cell">Created</th>
-              <th className="text-right p-4 font-semibold text-muted-foreground">Actions</th>
+              <th className="text-left p-4">School</th>
+              <th className="text-left p-4 hidden md:table-cell">Type</th>
+              <th className="text-left p-4 hidden lg:table-cell">Admin</th>
+              <th className="text-left p-4">Status</th>
+              <th className="text-left p-4">Subscription</th>
+              <th className="text-left p-4">End Date</th>
+              <th className="text-right p-4">Actions</th>
             </tr>
           </thead>
+
+          {/* Body */}
           <tbody>
-            {filtered.map((school) => (
-              <tr key={school.id} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
-                <td className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                      <SchoolIcon className="w-4 h-4 text-primary" />
+            {filtered.map((school) => {
+              const initials = school.name
+                .split(" ")
+                .map((w) => w[0])
+                .slice(0, 2)
+                .join("");
+
+              return (
+                <tr
+                  key={school.id}
+                  className="border-b border-border hover:bg-muted/30"
+                >
+                  {/* School */}
+                  <td className="p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-sm font-semibold text-primary">
+                        {initials}
+                      </div>
+
+                      <div>
+                        <p className="font-medium">{school.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {school.email}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-medium">{school.name}</p>
-                      <p className="text-xs text-muted-foreground">{school.type}</p>
+                  </td>
+
+                  {/* Type */}
+                  <td className="p-4 hidden md:table-cell text-muted-foreground">
+                    {school.type}
+                  </td>
+
+                  {/* Admin */}
+                  <td className="p-4 hidden lg:table-cell">
+                    {school.admin}
+                  </td>
+
+                  {/* Status */}
+                  <td className="p-4">
+                    <span
+                      className={`px-2.5 py-1 rounded-full text-xs font-medium ${
+                        school.status === "Active"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-700"
+                      }`}
+                    >
+                      {school.status}
+                    </span>
+                  </td>
+
+                  {/* Subscription */}
+                  <td className="p-4">
+                    <span
+                      className={`px-2.5 py-1 rounded-full text-xs font-medium ${
+                        school.subscription === "Paid"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-700"
+                      }`}
+                    >
+                      {school.subscription}
+                    </span>
+                  </td>
+
+                  {/* End Date */}
+                  <td className="p-4 text-muted-foreground">
+                    {school.subscription === "Paid"
+                      ? school.subscriptionEnd
+                      : "-"}
+                  </td>
+
+                  {/* Actions */}
+                  <td className="p-4">
+                    <div className="flex justify-end gap-2">
+                      <button className="p-2 hover:bg-muted rounded-lg">
+                        <Eye className="w-4 h-4" />
+                      </button>
+                      <button className="p-2 hover:bg-muted rounded-lg">
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      <button className="p-2 hover:bg-destructive/10 rounded-lg">
+                        <Trash2 className="w-4 h-4 text-red-500" />
+                      </button>
                     </div>
-                  </div>
-                </td>
-                <td className="p-4 text-muted-foreground hidden md:table-cell">{school.email}</td>
-                <td className="p-4 text-muted-foreground hidden lg:table-cell">{school.phone}</td>
-                <td className="p-4 hidden xl:table-cell">{school.admin}</td>
-                <td className="p-4">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    school.status === "Active"
-                      ? "bg-success/10 text-success"
-                      : "bg-destructive/10 text-destructive"
-                  }`}>
-                    {school.status}
-                  </span>
-                </td>
-                <td className="p-4 text-muted-foreground hidden lg:table-cell">{school.created}</td>
-                <td className="p-4">
-                  <div className="flex items-center justify-end gap-1">
-                    <button className="p-2 rounded-lg hover:bg-muted transition-colors" title="View">
-                      <Eye className="w-4 h-4 text-muted-foreground" />
-                    </button>
-                    <button className="p-2 rounded-lg hover:bg-muted transition-colors" title="Edit">
-                      <Edit className="w-4 h-4 text-muted-foreground" />
-                    </button>
-                    <button className="p-2 rounded-lg hover:bg-destructive/10 transition-colors" title="Delete">
-                      <Trash2 className="w-4 h-4 text-destructive" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
 
+      {/* Modal */}
       {showModal && <AddSchoolModal onClose={() => setShowModal(false)} />}
     </div>
   );

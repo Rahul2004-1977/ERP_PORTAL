@@ -1,62 +1,140 @@
-import {
-  School,
-  UserCog,
-  CheckCircle,
-  Users,
-  GraduationCap,
-  Clock,
-} from "lucide-react";
-import { StatCard } from "@/components/StatCard";
-import { SchoolDistributionChart } from "@/components/SchoolDistributionChart";
+import { useState } from "react";
 
-const recentActivity = [
-  { school: "Greenwood Academy", action: "Registered", time: "2 hours ago", status: "active" },
-  { school: "Sunrise International", action: "Registered", time: "5 hours ago", status: "active" },
-  { school: "Heritage School", action: "Updated", time: "1 day ago", status: "active" },
-  { school: "Mapleton High", action: "Suspended", time: "2 days ago", status: "inactive" },
-  { school: "Riverside Public", action: "Registered", time: "3 days ago", status: "active" },
+type School = {
+  id: number;
+  name: string;
+  admin: string;
+  email: string;
+  phone: string;
+  students: number;
+  teachers: number;
+  status: "paid" | "unpaid";
+};
+
+const schoolsData: School[] = [
+  {
+    id: 1,
+    name: "Greenwood Academy",
+    admin: "John Doe",
+    email: "john@greenwood.com",
+    phone: "9876543210",
+    students: 1200,
+    teachers: 80,
+    status: "paid",
+  },
+  {
+    id: 2,
+    name: "Sunrise International",
+    admin: "Amit Sharma",
+    email: "amit@sunrise.com",
+    phone: "9123456780",
+    students: 900,
+    teachers: 60,
+    status: "unpaid",
+  },
+  {
+    id: 3,
+    name: "Heritage School",
+    admin: "Priya Mehta",
+    email: "priya@heritage.com",
+    phone: "9988776655",
+    students: 1500,
+    teachers: 100,
+    status: "paid",
+  },
+  {
+    id: 4,
+    name: "Mapleton High",
+    admin: "Rahul Verma",
+    email: "rahul@mapleton.com",
+    phone: "9012345678",
+    students: 700,
+    teachers: 50,
+    status: "unpaid",
+  },
 ];
 
 export default function DashboardPage() {
+  const [schools] = useState(schoolsData);
+
+  const total = schools.length;
+  const paid = schools.filter((s) => s.status === "paid").length;
+  const unpaid = schools.filter((s) => s.status === "unpaid").length;
+
   return (
     <div className="space-y-6">
-      {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
-        <StatCard title="Total Schools" value={48} icon={School} trend="12% this month" trendUp color="primary" />
-        <StatCard title="School Admins" value={52} icon={UserCog} trend="8% this month" trendUp color="info" />
-        <StatCard title="Active Schools" value={42} icon={CheckCircle} trend="2 new today" trendUp color="success" />
-        <StatCard title="Total Students" value="12,480" icon={Users} trend="5% this month" trendUp color="warning" />
-        <StatCard title="Total Teachers" value="1,245" icon={GraduationCap} trend="3% this month" trendUp color="primary" />
-      </div>
-
-      {/* Chart & Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 stat-card">
-          <h3 className="text-base font-display font-semibold mb-4">School Distribution</h3>
-          <SchoolDistributionChart />
+      
+      {/* 🔢 TOP CARDS (KEPT) */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="stat-card p-4">
+          <h3 className="text-sm text-muted-foreground">Total Schools</h3>
+          <p className="text-2xl font-bold">{total}</p>
         </div>
 
-        <div className="stat-card">
-          <h3 className="text-base font-display font-semibold mb-4">Recent Activity</h3>
-          <div className="space-y-3">
-            {recentActivity.map((item, i) => (
-              <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
-                <div className={`mt-0.5 w-2 h-2 rounded-full shrink-0 ${
-                  item.status === "active" ? "bg-success" : "bg-destructive"
-                }`} />
-                <div className="min-w-0">
-                  <p className="text-sm font-medium truncate">{item.school}</p>
-                  <p className="text-xs text-muted-foreground">{item.action}</p>
-                </div>
-                <div className="ml-auto flex items-center gap-1 text-xs text-muted-foreground shrink-0">
-                  <Clock className="w-3 h-3" />
-                  {item.time}
-                </div>
-              </div>
-            ))}
-          </div>
+        <div className="stat-card p-4">
+          <h3 className="text-sm text-muted-foreground">Paid Schools</h3>
+          <p className="text-2xl font-bold text-green-600">{paid}</p>
+        </div>
+
+        <div className="stat-card p-4">
+          <h3 className="text-sm text-muted-foreground">Unpaid Schools</h3>
+          <p className="text-2xl font-bold text-red-600">{unpaid}</p>
         </div>
       </div>
+
+      {/* 📋 BIGGER TABLE */}
+      <div className="stat-card p-6">
+        <h3 className="text-xl font-semibold mb-6">
+          School Subscription Details
+        </h3>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm border-separate border-spacing-y-2">
+            <thead>
+              <tr className="text-left text-muted-foreground">
+                <th className="py-3 px-4">School</th>
+                <th className="px-4">Admin</th>
+                <th className="px-4">Email</th>
+                <th className="px-4">Phone</th>
+                <th className="px-4">Students</th>
+                <th className="px-4">Teachers</th>
+                <th className="px-4">Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {schools.map((school) => (
+                <tr
+                  key={school.id}
+                  className="bg-muted/40 hover:bg-muted/60 rounded-lg"
+                >
+                  <td className="py-4 px-4 font-medium text-base">
+                    {school.name}
+                  </td>
+                  <td className="px-4">{school.admin}</td>
+                  <td className="px-4">{school.email}</td>
+                  <td className="px-4">{school.phone}</td>
+                  <td className="px-4">{school.students}</td>
+                  <td className="px-4">{school.teachers}</td>
+
+                  <td className="px-4">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        school.status === "paid"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-700"
+                      }`}
+                    >
+                      {school.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
   );
 }
