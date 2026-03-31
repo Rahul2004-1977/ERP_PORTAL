@@ -39,11 +39,12 @@ const iconMap: Record<string, any> = {
   Support: HeadphonesIcon,
   Logs: ScrollText,
   Settings: Settings,
+  "School Diary": BookOpen,
 };
 
 // 🔥 SAME GROUP STRUCTURE (NO UI CHANGE)
 const menuGroups = [
-  { label: "Overview", items: ["Dashboard"] },
+  { label: "Overview", items: ["Dashboard", "School Diary"] },
   { label: "Academics", items: ["Communication", "Academics", "Attendance", "Students", "Staff", "Digital Classroom", "Exams", "Time Table"] },
   { label: "Administration", items: ["Finance", "Admissions", "HR", "Transport", "Hostel", "Library", "Inventory"] },
   { label: "Services", items: ["Store", "Cafeteria", "Bookstore", "Virtual Classes", "Sports"] },

@@ -6,10 +6,12 @@ import ApprovalsModule from "./modules/ApprovalsModule";
 import MaintenanceModule from "./modules/MaintenanceModule";
 import SurveyModule from "./modules/SurveyModule";
 import DownloadsModule from "./modules/DownloadsModule.tsx"
+import SchoolDiaryModule from "./modules/SchoolDiaryModule";
 
 const moduleNames: Record<string, string> = {
   communication: "Communication",
-  academics: "Academics", // ✅ added
+  academics: "Academics",
+  "school-diary": "School Diary",
 };
 
 export default function SchoolModulePage() {
@@ -38,6 +40,9 @@ export default function SchoolModulePage() {
       
       case "downloads":
         return <DownloadsModule />;
+
+      case "school-diary":
+        return <SchoolDiaryModule />;
 
       default:
         return (
